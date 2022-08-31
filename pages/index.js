@@ -24,24 +24,39 @@ export default function Home(props) {
   console.log("urls", urls);
   const callAPI = () => {
     console.log(Array_url);
+    let string = '';
+    let i = 0;
     if (url.toString() != "") {
       async function action(url) {
-       try {
-        const response = await fetch(`http://${window.location.host}/api/hello`, {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(url),
-        });
-        const {data} = await response.json();
-        handleCheck(data)
-       } catch (error) {
+        try {
+          const response = await fetch(`http://${window.location.host}/api/hello`, {
+            method: "post",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(url),
+          });
+          const { data } = await response.json();
+
+          if (data) {
+              // Kiểm tra khi nào có data mới cộng thêm 1 đơn vị chi i
+            i += 1;
+             // Sau đó cộng chuỗi biến string với data
+            string += data;
+            // Sau khi i có giá trị bằng với độ dài mảng Array_url thì mới gọi hàm handleCheck
+            // Khi mà i có có giá trị bằng với độ dài mảng Array_url thì chắc chuỗi string sẽ là
+            // chuỗi được kết hợp từ data các request trả về
+            if (i == Array_url.length) {
+              handleCheck(string);
+            }
+          }
+
+        } catch (error) {
           console.log(error);
-       }
+        }
       }
       for (let index = 0; index < Array_url.length; index++) {
-        action(Array_url[index]); 
+        action(Array_url[index]);
       }
     } else alert("Please Enter Url");
   };
@@ -58,7 +73,7 @@ export default function Home(props) {
   // const check_true = document.getElementsById('checkbox_true_hidden')
   const handleCheck = (data = "") => {
     if (url_check.toString() !== "") {
-      if (data.indexOf(url_check) !== -1) {
+      if (data.toLowerCase().indexOf(url_check) !== -1) {
         let a = check_true();
         a[0].classList.add("checkbox_true_show");
         let b = check_false();
