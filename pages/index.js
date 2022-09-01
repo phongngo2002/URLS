@@ -13,32 +13,45 @@ export default function Home(props) {
   // console.log('array',Array_url);
   let Array_url_submit = url.toString().split("\n");
   const handleSubmit = () => {
-    Array_url_submit = url.toString().split("\n");
-    console.log("array_submit", Array_url_submit);
-
+    // Array_url_submit = url.toString().split("\n");
+    // console.log("array_submit", Array_url_submit);
     if (Array_url_submit.toString() != "") {
       setUrls((prev) => [...prev, ...Array_url_submit]);
       setUrl("");
     } else alert("Please Enter Url");
   };
-  console.log("urls", urls);
+  // console.log("urls", urls);
   const callAPI = () => {
     //window.location.host
-    console.log(Array_url);
+    // console.log(Array_url);
+    let string = "";
+    let i = 0;
     if (url.toString() != "") {
-      fetch(`http://${window.location.host}/api/hello`, {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(Array_url),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          // setData(data.html);
-          handleCheck(data.a);
-        })
-        .catch((err) => console.log(Array_url));
+      async function call(urls) {
+        try {
+          const res = await fetch(`http://${window.location.host}/api/hello`, {
+            method: "post",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(urls),
+          });
+          const { data } = await res.json();
+          if (data) {
+            i += 1;
+            string += data;
+            if (i == Array_url.length) {
+              handleCheck(string);
+              alert('CHECKED')
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      for (let i = 0; i < Array_url.length; i++) {
+        call(Array_url[i]);
+      }
     } else alert("Please Enter Url");
   };
 
@@ -52,9 +65,11 @@ export default function Home(props) {
     return document.getElementsByClassName("checkbox_false_hidden");
   };
   // const check_true = document.getElementsById('checkbox_true_hidden')
-  const handleCheck = (data = "") => {
+  const handleCheck = (data) => {
+    // console.log(data);
     if (url_check.toString() !== "") {
       if (data.indexOf(url_check) !== -1) {
+        console.log(data);
         let a = check_true();
         a[0].classList.add("checkbox_true_show");
         let b = check_false();
@@ -102,12 +117,12 @@ export default function Home(props) {
           >
             Check
           </button>
-          <div className="checkbox_true_hidden">
+          {/* <div className="checkbox_true_hidden">
             <i class="fa-solid fa-check"></i>
           </div>
           <div className="checkbox_false_hidden">
             <i class="fa-solid fa-x"></i>
-          </div>
+          </div> */}
         </div>
         <div className="box">
           <textarea
@@ -134,6 +149,14 @@ export default function Home(props) {
           {urls.map((url_submit, index) => (
             <div key={index} className="show_url">
               <p className="url">{url_submit}</p>
+              <div>
+                <div className="checkbox_true_hidden">
+                  <i class="fa-solid fa-check"></i>
+                </div>
+                <div className="checkbox_false_hidden">
+                  <i class="fa-solid fa-x"></i>
+                </div>
+              </div>
             </div>
           ))}
         </div>

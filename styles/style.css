@@ -49,8 +49,6 @@ h1{
 /*  */
 .checkbox_true_hidden{
   display: none;
-  padding: 10px;
-  margin-bottom: 30px;
   border: 1px solid #ccc;
   background-color: aqua;
 }
@@ -60,8 +58,6 @@ h1{
 
 .checkbox_false_hidden{
   display: none;
-  padding: 10px;
-  margin-bottom: 30px;
   border: 1px solid #ccc;
   background-color: aqua;
 }
@@ -113,7 +109,7 @@ h1{
 .show_url{
   margin: 10px;
   border-bottom: 1px solid #ccc;
-  /* display: flex; */
+  display: flex;
   justify-content: space-between;
   align-items: center;
   word-wrap: break-word;
